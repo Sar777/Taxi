@@ -35,6 +35,12 @@ namespace TaxiSystem.Src.Database.MySQL
             return _instance;
         }
 
+        public void PExecute(string query)
+        {
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.ExecuteNonQuery();
+        }
+
         public MySqlDataReader Execute(string query)
         {
             if (!IsConnect())
@@ -75,6 +81,16 @@ namespace TaxiSystem.Src.Database.MySQL
             }
 
             return result;
+        }
+
+        public void BeginTransaction()
+        {
+            PExecute("START TRANSACTION");
+        }
+
+        public void CommitTransaction()
+        {
+            PExecute("COMMIT");
         }
 
         public void Close()

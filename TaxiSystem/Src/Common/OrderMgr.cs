@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TaxiSystem.Src.Database.MySQL;
 
 namespace TaxiSystem.Src.Common
 {
@@ -40,6 +41,17 @@ namespace TaxiSystem.Src.Common
         public int GetMaxOrderingID()
         {
             return _orderings.Count;
+        }
+
+        public void SaveAll()
+        {
+            MySQL mysql = MySQL.Instance();
+            mysql.BeginTransaction();
+
+            foreach (Order order in _orderings)
+                order.SaveToDB(false);
+
+            mysql.CommitTransaction();
         }
     }
 }

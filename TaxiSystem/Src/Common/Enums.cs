@@ -14,21 +14,12 @@ namespace TaxiSystem.Src.Common
         CAR_TYPE_TRUCK                  = 2,
     }
 
-    // Типы легковых автомобилей
-    public enum PassengerCarType
-    {
-        PASSENGER_CAR_DEFAULT          = 0,
-        PASSENGER_CAR_HATCHBACK        = 1,
-        PASSENGER_CAR_ESTATE           = 2,
-        PASSENGER_CAR_MINIBUS          = 3
-    }
-
     // Состояние заказа
     public enum OrderStatus
     {
         ORDERING_STATUS_NONE            = 0,
         ORDERING_STATUS_QUEUE           = 1,
-        ORDERING_STATUS_WAITE           = 2,
+        ORDERING_STATUS_WAIT            = 2,
         ORDERING_STATUS_IN_PROCESS      = 3,
         ORDERING_STATUS_DONE            = 4
     }
@@ -46,7 +37,7 @@ namespace TaxiSystem.Src.Common
     public enum DriverStatus
     {
         DRIVER_STATUS_NONE              = 0,
-        DRIVER_STATUS_WAITE             = 1,
+        DRIVER_STATUS_WAIT              = 1,
         DRIVER_STATUS_IN_PROGRESS       = 2,
     }
 }
