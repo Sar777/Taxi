@@ -1,10 +1,11 @@
-﻿using TaxiSystem.Src.Auth;
+﻿using TaxiSystem.Auth;
+using TaxiSystem.Database.MySQL;
+using TaxiSystem.Object;
+using TaxiSystem.RatingData;
 using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Database.MySQL;
 using TaxiSystem.Src.Object;
-using TaxiSystem.Src.RatingData;
 
-namespace TaxiSystem.Src.Users
+namespace TaxiSystem.Users
 {
     public class Driver : User
     {
@@ -12,20 +13,23 @@ namespace TaxiSystem.Src.Users
         public Rating Rating { get; set; }
         public DriverStatus Status { get; set; }
 
-        public Driver(int Id, string name, AuthToken token) : base(Id, name, token)
+        public Driver() : base() { }
+
+        public Driver(int id, string name, AuthToken token) : base(id, name, token)
         {
             UserTypeId = UserType.USER_TYPE_DRIVER;
             this.Status = DriverStatus.DRIVER_STATUS_NONE;
         }
 
-        public override void SaveToDB(bool trans = true)
+        public override void SaveToDb(bool trans = true)
         {
-            MySQL mysql = MySQL.Instance();
+            var mysql = MySQL.Instance();
             if (trans)
                 mysql.BeginTransaction();
 
-            mysql.PExecute(string.Format("DELETE FROM `cars` WHERE `Id` = {0}", ID));
-            mysql.PExecute(string.Format("INSERT INTO `cars` (`Id`, `status`, `cardId`) VALUES ({0}, {1}, {2})", ID, Status, Car.ID));
+            base.SaveToDb(false);
+            mysql.PExecute($"DELETE FROM `drivers` WHERE `Id` = {Id}");
+            mysql.PExecute($"INSERT INTO `drivers` (`Id`, `status`, `cardId`) VALUES ({0}, {1}, {2})");
 
             if (trans)
                 mysql.CommitTransaction();

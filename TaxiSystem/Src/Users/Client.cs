@@ -1,18 +1,23 @@
-﻿
-using TaxiSystem.Src.Auth;
+﻿using TaxiSystem.Auth;
+using TaxiSystem.Common;
+using TaxiSystem.Object;
 using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Object;
 
-namespace TaxiSystem.Src.Users
+namespace TaxiSystem.Users
 {
     public class Client : User
     {
         private Order Order { get; set; }
         public Address Address { get; set; }
 
-        public Client(int Id, string name, AuthToken token) : base(Id, name, token)
+        public Client(int id, string name, AuthToken token) : base(id, name, token)
         {
             UserTypeId = UserType.USER_TYPE_CLIENT;
+        }
+
+        public override void SaveToDb(bool trans = true)
+        {
+            base.SaveToDb(trans);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace TaxiSystem
+﻿namespace TaxiSystem.AuthForms
 {
     partial class AuthForm
     {
@@ -29,41 +29,42 @@
         private void InitializeComponent()
         {
             this._lbUsername = new System.Windows.Forms.Label();
-            this._textBoxUsername = new System.Windows.Forms.TextBox();
-            this._textBoxPassword = new System.Windows.Forms.TextBox();
+            this._tbUsername = new System.Windows.Forms.TextBox();
+            this._tbPassword = new System.Windows.Forms.TextBox();
             this._lbPassword = new System.Windows.Forms.Label();
             this._btAuth = new System.Windows.Forms.Button();
             this._lbAuthError = new System.Windows.Forms.Label();
+            this._btReg = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _lbUsername
             // 
             this._lbUsername.AutoSize = true;
-            this._lbUsername.Location = new System.Drawing.Point(23, 23);
+            this._lbUsername.Location = new System.Drawing.Point(26, 42);
             this._lbUsername.Name = "_lbUsername";
             this._lbUsername.Size = new System.Drawing.Size(106, 13);
             this._lbUsername.TabIndex = 0;
             this._lbUsername.Text = "Имя пользователя:";
             // 
-            // _textBoxUsername
+            // _tbUsername
             // 
-            this._textBoxUsername.Location = new System.Drawing.Point(25, 39);
-            this._textBoxUsername.Name = "_textBoxUsername";
-            this._textBoxUsername.Size = new System.Drawing.Size(100, 20);
-            this._textBoxUsername.TabIndex = 1;
+            this._tbUsername.Location = new System.Drawing.Point(28, 58);
+            this._tbUsername.Name = "_tbUsername";
+            this._tbUsername.Size = new System.Drawing.Size(100, 20);
+            this._tbUsername.TabIndex = 1;
             // 
-            // _textBoxPassword
+            // _tbPassword
             // 
-            this._textBoxPassword.Location = new System.Drawing.Point(25, 83);
-            this._textBoxPassword.Name = "_textBoxPassword";
-            this._textBoxPassword.Size = new System.Drawing.Size(100, 20);
-            this._textBoxPassword.TabIndex = 3;
-            this._textBoxPassword.UseSystemPasswordChar = true;
+            this._tbPassword.Location = new System.Drawing.Point(28, 102);
+            this._tbPassword.Name = "_tbPassword";
+            this._tbPassword.Size = new System.Drawing.Size(100, 20);
+            this._tbPassword.TabIndex = 3;
+            this._tbPassword.UseSystemPasswordChar = true;
             // 
             // _lbPassword
             // 
             this._lbPassword.AutoSize = true;
-            this._lbPassword.Location = new System.Drawing.Point(22, 67);
+            this._lbPassword.Location = new System.Drawing.Point(25, 86);
             this._lbPassword.Name = "_lbPassword";
             this._lbPassword.Size = new System.Drawing.Size(48, 13);
             this._lbPassword.TabIndex = 2;
@@ -71,7 +72,7 @@
             // 
             // _btAuth
             // 
-            this._btAuth.Location = new System.Drawing.Point(24, 109);
+            this._btAuth.Location = new System.Drawing.Point(27, 128);
             this._btAuth.Name = "_btAuth";
             this._btAuth.Size = new System.Drawing.Size(101, 22);
             this._btAuth.TabIndex = 4;
@@ -83,22 +84,35 @@
             // 
             this._lbAuthError.AutoSize = true;
             this._lbAuthError.ForeColor = System.Drawing.Color.Crimson;
-            this._lbAuthError.Location = new System.Drawing.Point(25, 5);
+            this._lbAuthError.Location = new System.Drawing.Point(12, 9);
+            this._lbAuthError.MaximumSize = new System.Drawing.Size(130, 25);
+            this._lbAuthError.MinimumSize = new System.Drawing.Size(130, 25);
             this._lbAuthError.Name = "_lbAuthError";
-            this._lbAuthError.Size = new System.Drawing.Size(0, 13);
+            this._lbAuthError.Size = new System.Drawing.Size(130, 25);
             this._lbAuthError.TabIndex = 5;
             this._lbAuthError.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // _btReg
+            // 
+            this._btReg.Location = new System.Drawing.Point(27, 156);
+            this._btReg.Name = "_btReg";
+            this._btReg.Size = new System.Drawing.Size(101, 23);
+            this._btReg.TabIndex = 6;
+            this._btReg.Text = "Регистрация";
+            this._btReg.UseVisualStyleBackColor = true;
+            this._btReg.Click += new System.EventHandler(this._btReg_Click);
             // 
             // AuthForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(156, 141);
+            this.ClientSize = new System.Drawing.Size(158, 192);
+            this.Controls.Add(this._btReg);
             this.Controls.Add(this._lbAuthError);
             this.Controls.Add(this._btAuth);
-            this.Controls.Add(this._textBoxPassword);
+            this.Controls.Add(this._tbPassword);
             this.Controls.Add(this._lbPassword);
-            this.Controls.Add(this._textBoxUsername);
+            this.Controls.Add(this._tbUsername);
             this.Controls.Add(this._lbUsername);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AuthForm";
@@ -112,10 +126,11 @@
         #endregion
 
         private System.Windows.Forms.Label _lbUsername;
-        private System.Windows.Forms.TextBox _textBoxUsername;
-        private System.Windows.Forms.TextBox _textBoxPassword;
+        private System.Windows.Forms.TextBox _tbUsername;
+        private System.Windows.Forms.TextBox _tbPassword;
         private System.Windows.Forms.Label _lbPassword;
         private System.Windows.Forms.Button _btAuth;
         private System.Windows.Forms.Label _lbAuthError;
+        private System.Windows.Forms.Button _btReg;
     }
 }

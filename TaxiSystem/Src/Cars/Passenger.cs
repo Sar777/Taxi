@@ -1,17 +1,16 @@
-﻿
+﻿using TaxiSystem.Src.Common;
 using TaxiSystem.Src.Object;
-using TaxiSystem.Src.Common;
 
-namespace TaxiSystem.Src.Cars
+namespace TaxiSystem.Cars
 {
-    class Passenger : Car
+    public class Passenger : Car
     {
         public int Passengers { get; private set; }
 
-        public Passenger() : base()
+        private Passenger() : base()
         {
             this.Passengers = 0;
-            this.CarTypeId = CarType.CAR_TYPE_PASSENGER;
+            this.CarTypeId = TaxiType.TAXI_TYPE_PASSENGER;
         }
     }
 }

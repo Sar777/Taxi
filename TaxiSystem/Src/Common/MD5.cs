@@ -1,19 +1,19 @@
-﻿using System.Text;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using System.Text;
 
-namespace TaxiSystem.Src.Common
+namespace TaxiSystem.Common
 {
     public class MD5Hash
     {
-        public static string GetHash(string input)
+        public static string Get(string input)
         {
-            MD5 md5Hash = MD5.Create();
+            var md5Hash = MD5.Create();
             byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
 
-            StringBuilder sBuilder = new StringBuilder();
+            var sBuilder = new StringBuilder();
 
-            for (int i = 0; i < data.Length; i++)
-                sBuilder.Append(data[i].ToString("x2"));
+            foreach (byte t in data)
+                sBuilder.Append(t.ToString("x2"));
 
             return sBuilder.ToString();
         }

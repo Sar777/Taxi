@@ -1,6 +1,6 @@
 ﻿
+using TaxiSystem.Database.MySQL;
 using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Database.MySQL;
 
 namespace TaxiSystem.Src.Object
 {
@@ -11,17 +11,17 @@ namespace TaxiSystem.Src.Object
         public string Number { get; set; }
         public string Color { get; set; }
 
-        public CarType CarTypeId { get; protected set; }
+        public TaxiType CarTypeId { get; protected set; }
 
-        public Car()
+        protected Car()
         {
             this.Model = "Unknown";
             this.Number = "Unknown";
             this.Color = "Unknown";
-            this.CarTypeId = CarType.CAR_TYPE_NONE;
+            this.CarTypeId = TaxiType.TAXI_TYPE_MAX;
         }
 
-        public void SaveToDB(bool trans = true)
+        public void SaveToDB(bool trans = true)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
         {
             MySQL mysql = MySQL.Instance();
 

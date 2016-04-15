@@ -1,13 +1,13 @@
-﻿using TaxiSystem.Src.Auth;
+﻿using TaxiSystem.Auth;
+using TaxiSystem.Database.MySQL;
 using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Database.MySQL;
-using TaxiSystem.Src.Users;
+using TaxiSystem.Users;
 
-namespace TaxiSystem.Src.Object
+namespace TaxiSystem.Object
 {
     public class User
     {
-        public int ID { get; private set; }
+        public int Id { get; private set; }
         public string Username { get; private set; }
 
         public UserType UserTypeId { get; protected set; }
@@ -16,21 +16,29 @@ namespace TaxiSystem.Src.Object
 
         public User()
         {
-            this.ID = 0;
+            this.Id = 0;
             this.UserTypeId = UserType.USER_TYPE_UNKNOWN;
             this.Token = null;
+            this.Username = "Unknown";
         }
 
         public User(int id, string username)
         {
-            this.ID = id;
+            this.Id = id;
+            this.Username = username;
+            this.Token = null;
+        }
+
+        public User(string username)
+        {
+            this.Id = 0;
             this.Username = username;
             this.Token = null;
         }
 
         public User(int id, string username, AuthToken token)
         {
-            this.ID = id;
+            this.Id = id;
             this.Username = username;
             this.Token = token;
         }
@@ -39,26 +47,14 @@ namespace TaxiSystem.Src.Object
         public Manager ToManager() { return this as Manager; }
         public Driver ToDriver() { return this as Driver; }
 
-        virtual public void SaveToDB(bool trans = true)
+        public virtual void SaveToDb(bool trans = true)
         {
-            MySQL mysql = MySQL.Instance();
+            var mysql = MySQL.Instance();
             if (trans)
                 mysql.BeginTransaction();
 
-            mysql.PExecute(string.Format("DELETE FROM `users` WHERE `Id` = {0}", ID));
-            mysql.PExecute(string.Format("INSERT INTO `users` (`Id`, `type`, `name`) VALUES ({0}, {1}, {2})", ID, UserTypeId, Username));
-
-            switch (UserTypeId)
-            {
-                case UserType.USER_TYPE_DRIVER:
-                    ToDriver().SaveToDB(false);
-                    break;
-                case UserType.USER_TYPE_CLIENT:
-                case UserType.USER_TYPE_MANAGER:
-                default:
-                    System.Console.WriteLine("User::SaveToDB: User type {0} not supported.", UserTypeId.ToString());
-                    break;
-            }
+            mysql.PExecute(string.Format("DELETE FROM `users` WHERE `Id` = {0}", Id));
+            mysql.PExecute(string.Format("INSERT INTO `users` (`Id`, `type`, `name`) VALUES ({0}, {1}, '{2}')", Id, (int)UserTypeId, Username));
 
             if (trans)
                 mysql.CommitTransaction();

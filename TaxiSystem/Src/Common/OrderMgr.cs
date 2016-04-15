@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using TaxiSystem.Src.Database.MySQL;
+using TaxiSystem.Common;
+using TaxiSystem.Database.MySQL;
 
 namespace TaxiSystem.Src.Common
 {
     public class OrderMgr
     {
-        private static OrderMgr instance;
-        private List<Order> _orderings;
+        private static OrderMgr _instance;
+        private readonly List<Order> _orderings;
 
         private OrderMgr()
         {
@@ -17,9 +18,9 @@ namespace TaxiSystem.Src.Common
         {
             get
             {
-                if (instance == null)
-                    instance = new OrderMgr();
-                return instance;
+                if (_instance == null)
+                    _instance = new OrderMgr();
+                return _instance;
             }
         }
 
@@ -33,23 +34,23 @@ namespace TaxiSystem.Src.Common
             _orderings.Remove(ordering);
         }
 
-        public Order GetOrderingByID(int Id)
+        public Order GetOrderingById(int id)
         {
-            return _orderings.Find(x => x.ID == Id);
+            return _orderings.Find(x => x.Id == id);
         }
 
-        public int GetMaxOrderingID()
+        public int GetMaxOrderingId()
         {
             return _orderings.Count;
         }
 
         public void SaveAll()
         {
-            MySQL mysql = MySQL.Instance();
+            var mysql = MySQL.Instance();
             mysql.BeginTransaction();
 
-            foreach (Order order in _orderings)
-                order.SaveToDB(false);
+            foreach (var order in _orderings)
+                order.SaveToDb(false);
 
             mysql.CommitTransaction();
         }

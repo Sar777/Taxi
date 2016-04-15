@@ -1,27 +1,23 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
+using MySql.Data.MySqlClient;
+using static System.String;
 
-namespace TaxiSystem.Src.Database.MySQL
+namespace TaxiSystem.Database.MySQL
 {
-    class MySQL
+    internal class MySQL : IDisposable
     {
-        private string Host = "127.0.0.1";
-        private string DB = "taxi";
-        private string Username = "root";
-        private string Password = "";
-        private int Port = 3306;
+        private const string Host = "127.0.0.1";
+        private const string Username = "root";
+        private const string Password = "";
+        private const int Port = 3306;
 
         private MySQL() { }
 
-        public string DatabaseName
-        {
-            get { return DB; }
-            set { DB = value; }
-        }
+        private string DatabaseName { get; set; } = "taxi";
 
         private MySqlConnection connection = null;
- 
-        public MySqlConnection Connection
+
+        private MySqlConnection Connection
         {
             get { return connection; }
         }
@@ -35,10 +31,19 @@ namespace TaxiSystem.Src.Database.MySQL
             return _instance;
         }
 
-        public void PExecute(string query)
+        public int PExecute(string query)
         {
-            MySqlCommand cmd = new MySqlCommand(query, connection);
-            cmd.ExecuteNonQuery();
+            var cmd = new MySqlCommand(query, connection);
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return -1;
         }
 
         public MySqlDataReader Execute(string query)
@@ -46,7 +51,7 @@ namespace TaxiSystem.Src.Database.MySQL
             if (!IsConnect())
                 return null;
 
-            MySqlCommand cmd = new MySqlCommand(query, connection);
+            var cmd = new MySqlCommand(query, connection);
             try
             {
                 return cmd.ExecuteReader();
@@ -59,25 +64,24 @@ namespace TaxiSystem.Src.Database.MySQL
             return null;
         }
 
-        public bool IsConnect()
+        private bool IsConnect()
         {
             if (Connection != null)
                 return true;
 
-            if (String.IsNullOrEmpty(DatabaseName))
+            if (IsNullOrEmpty(DatabaseName))
                 return false;
 
             bool result = false;
             try
             {
-                string connstring = string.Format("Server={0}; database={1}; UID={2}; password={3}; port={4}", Host, DB, Username, Password, Port);
-                connection = new MySqlConnection(connstring);
+                connection = new MySqlConnection($"Server={Host}; database={DatabaseName}; UID={Username}; password={Password}; port={Port}");
                 connection.Open();
                 result = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine("MySQL Exeption: {0}", e.Message);
+                Console.WriteLine($"MySQL Exeption: {0}", e.Message);
             }
 
             return result;
@@ -104,10 +108,13 @@ namespace TaxiSystem.Src.Database.MySQL
 
         public override string ToString()
         {
-            if (!IsConnect())
-                return string.Format("MySQL: Failed connect to {0}", DatabaseName);
+            return !IsConnect() ? Format($"MySQL: Failed connect to {0}", DatabaseName) : Format($"MySQL: Connect to {0}. Server version: {1}", DatabaseName, connection.ServerVersion);
+        }
 
-            return string.Format("MySQL: Connect to {0}. Server version: {1}", DatabaseName, connection.ServerVersion);
-         }
+        public void Dispose()
+        {
+            if (IsConnect())
+                Close();
+        }
     }
 }

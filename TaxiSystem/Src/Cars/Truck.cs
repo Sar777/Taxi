@@ -1,14 +1,13 @@
-﻿
+﻿using TaxiSystem.Src.Common;
 using TaxiSystem.Src.Object;
-using TaxiSystem.Src.Common;
 
-namespace TaxiSystem.Src.Cars
+namespace TaxiSystem.Cars
 {
     public class Truck : Car
     {
-        public Truck() : base()
+        private Truck() : base()
         {
-            this.CarTypeId = CarType.CAR_TYPE_TRUCK;
+            this.CarTypeId = TaxiType.TAXI_TYPE_TRUCK;
         }
     }
 }

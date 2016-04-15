@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using TaxiSystem.Src.Database.MySQL;
-using TaxiSystem.Src.Object;
-using TaxiSystem.Src.Users;
+using TaxiSystem.Database.MySQL;
+using TaxiSystem.Object;
 
-namespace TaxiSystem.Src.Common
+namespace TaxiSystem.Common
 {
-    class UserMgr
+    internal class UserMgr
     {
-        private static UserMgr instance;
-        private List<User> _users;
+        private static UserMgr _instance;
+        private readonly List<User> _users;
 
         public UserMgr()
         {
@@ -19,9 +18,9 @@ namespace TaxiSystem.Src.Common
         {
             get
             {
-                if (instance == null)
-                    instance = new UserMgr();
-                return instance;
+                if (_instance == null)
+                    _instance = new UserMgr();
+                return _instance;
             }
         }
 
@@ -37,11 +36,11 @@ namespace TaxiSystem.Src.Common
 
         public void SaveAll()
         {
-            MySQL mysql = MySQL.Instance();
+            var mysql = MySQL.Instance();
             mysql.BeginTransaction();
 
-            foreach (User user in _users)
-                user.SaveToDB(false);
+            foreach (var user in _users)
+                user.SaveToDb(false);
 
             mysql.CommitTransaction();
         }

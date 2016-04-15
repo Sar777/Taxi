@@ -47,11 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthForm.cs">
+    <Compile Include="AuthForms\AuthForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AuthForm.Designer.cs">
+    <Compile Include="AuthForms\AuthForm.Designer.cs">
       <DependentUpon>AuthForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClientForms\ClientSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClientForms\ClientSettingsForm.Designer.cs">
+      <DependentUpon>ClientSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ManagerForm.cs">
       <SubType>Form</SubType>
@@ -59,11 +65,18 @@
     <Compile Include="ManagerForm.Designer.cs">
       <DependentUpon>ManagerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AuthForms\RegForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AuthForms\RegForm.Designer.cs">
+      <DependentUpon>RegForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Src\Auth\Auth.cs" />
     <Compile Include="Src\Auth\AuthToken.cs" />
     <Compile Include="Src\Cars\Passenger.cs" />
     <Compile Include="Src\Cars\Truck.cs" />
     <Compile Include="Src\Common\MD5.cs" />
+    <Compile Include="Src\Common\Time.cs" />
     <Compile Include="Src\Common\UserMgr.cs" />
     <Compile Include="Src\Database\MySQL\MySQL.cs" />
     <Compile Include="Src\Object\Car.cs" />
@@ -77,19 +90,22 @@
     <Compile Include="Src\Users\Driver.cs" />
     <Compile Include="Src\Users\Manager.cs" />
     <Compile Include="Src\Object\User.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="ClientForms\ClientForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="ClientForms\ClientForm.Designer.cs">
+      <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AuthForm.resx">
+    <EmbeddedResource Include="AuthForms\AuthForm.resx">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="ClientForms\ClientForm.resx">
+      <DependentUpon>ClientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClientForms\ClientSettingsForm.resx">
+      <DependentUpon>ClientSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManagerForm.resx">
       <DependentUpon>ManagerForm.cs</DependentUpon>
@@ -103,6 +119,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AuthForms\RegForm.resx">
+      <DependentUpon>RegForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

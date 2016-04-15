@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace TaxiSystem.Src.Common
 {
-    // Типы автомобилей
-    public enum CarType
+    // Типы такси
+    public enum TaxiType
     {
-        CAR_TYPE_NONE                   = 0,
-        CAR_TYPE_PASSENGER              = 1,
-        CAR_TYPE_TRUCK                  = 2,
+        TAXI_TYPE_PASSENGER             = 0,
+        TAXI_TYPE_TRUCK                 = 1,
+        TAXI_TYPE_MAX
     }
 
     // Состояние заказа
@@ -21,7 +21,8 @@ namespace TaxiSystem.Src.Common
         ORDERING_STATUS_QUEUE           = 1,
         ORDERING_STATUS_WAIT            = 2,
         ORDERING_STATUS_IN_PROCESS      = 3,
-        ORDERING_STATUS_DONE            = 4
+        ORDERING_STATUS_DONE            = 4,
+        ORDERING_STATUS_CANCELED        = 5,
     }
 
     // Типы пользователей

@@ -1,37 +1,41 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
+using TaxiSystem.Common;
+using TaxiSystem.Database.MySQL;
+using TaxiSystem.Object;
 using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Database.MySQL;
-using TaxiSystem.Src.Object;
-using TaxiSystem.Src.Users;
+using TaxiSystem.Users;
 
-namespace TaxiSystem.Src.Auth
+namespace TaxiSystem.Auth
 {
     public class Auth
     {
-        private static Auth instance;
+        private static Auth _instance;
 
         public static Auth Instance
         {
             get
             {
-                if (instance == null)
-                    instance = new Auth();
-                return instance;
+                if (_instance == null)
+                    _instance = new Auth();
+                return _instance;
             }
         }
 
-        public User Authorization(string username, string password)
+        public User Authorization(string username, string password, ref int errCode)
         {
-            MySQL mysql = MySQL.Instance();
-            string query = string.Format("SELECT `Id`, `type`, `username`, `password` FROM `users` WHERE `username` = '{0}' AND `password` = '{1}'", username, MD5Hash.GetHash(username + ":" + password));
+            var mysql = MySQL.Instance();
             User user = null;
-            using (MySqlDataReader reader = mysql.Execute(query))
+            using (var reader = mysql.Execute($"SELECT `Id`, `type`, `username`, `password` FROM `users` WHERE `username` = '{username}' AND `password` = '{MD5Hash.Get(username + ":" + password)}'"))
             {
-                if (!reader.Read())
+                if (reader == null)
+                    errCode = 0;
+                else if (!reader.Read())
+                    errCode = 1;
+
+                if (errCode != -1)
                     return null;
-                
-                int Id = reader.GetInt32(0);
+
+                int id = reader.GetInt32(0);
                 UserType type = (UserType)reader.GetByte(1);
                 string username_ = reader.GetString(2);
                 string password_ = reader.GetString(3);
@@ -39,17 +43,16 @@ namespace TaxiSystem.Src.Auth
                 switch ((UserType)reader.GetInt32(1))
                 {
                     case UserType.USER_TYPE_CLIENT:
-                        user = new Client(Id, username_, new AuthToken(username_, password_));
+                        user = new Client(id, username_, new AuthToken(username_, password_));
                         break;
                     case UserType.USER_TYPE_DRIVER:
-                        user = new Driver(Id, username_, new AuthToken(username_, password_));
+                        user = new Driver(id, username_, new AuthToken(username_, password_));
                         break;
                     case UserType.USER_TYPE_MANAGER:
-                        user = new Manager(Id, username_, new AuthToken(username_, password_));
+                        user = new Manager(id, username_, new AuthToken(username_, password_));
                         break;
                     default:
-                        Console.WriteLine("Auth::Authorization: Unknown user type {0}", type);
-                        break;
+                        throw new NotSupportedException(string.Format($"Auth::Authorization: Unknown user type {0}", type));
                 }
             }
 

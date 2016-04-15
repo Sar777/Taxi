@@ -1,48 +1,183 @@
 ﻿using System;
-using TaxiSystem.Src.Database.MySQL;
-using TaxiSystem.Src.Users;
+using TaxiSystem.Database.MySQL;
+using TaxiSystem.Object;
+using TaxiSystem.Src.Common;
+using TaxiSystem.Src.Object;
 
-namespace TaxiSystem.Src.Common
+namespace TaxiSystem.Common
 {
     public class Order
     {
-        public int ID { get; private set; }
-        public Address ordAdress { get; set; }
+        enum DBStatus
+        {
+            ORDER_NONE          = 0,
+            ORDER_NEW           = 1,
+            ORDER_CHANGED       = 2,
+            ORDER_MAX
+        }
+
+        public int Id { get; private set; }
+        public Address SAddress { get; set; }
+        public Address EAddress { get; set; }
         public DateTime Date { get; set; }
         public OrderStatus Status { get; set; }
-        public CarType OrderType { get; set; }
-        public Driver Driver { get; set; }
+        public TaxiType Type { get; set; }
+        public User Driver { get; set; }
+        public User Owner { get; set; }
 
-        public Order()
+        // Соятоние заказ для сохранения
+        private DBStatus _dbStatus;
+
+        private Order()
         {
-            this.ID = 0;
+            this.Id = 0;
             this.Status = OrderStatus.ORDERING_STATUS_NONE;
-            this.OrderType = CarType.CAR_TYPE_NONE;
+            this.Type = TaxiType.TAXI_TYPE_MAX;
             this.Driver = null;
+            this.Owner = null;
         }
  
-        public Order(CarType carType, Address ordAdress, DateTime date)
+        public Order(int id, User owner, User driver, TaxiType taxiType, OrderStatus status, Address sAddress, Address eAddress, DateTime date)
         {
-            this.ID = OrderMgr.Instance.GetMaxOrderingID() + 1;
-            this.ordAdress = ordAdress;
+            this.Id = id;
+            this.Owner = owner;
+            this.Driver = driver;
+            this.SAddress = sAddress;
+            this.EAddress = eAddress;
             this.Date = date;
-            this.Status = OrderStatus.ORDERING_STATUS_QUEUE;
-            this.OrderType = carType;
-            this.Driver = null;
+            this.Type = taxiType;
+            this.Status = status;
         }
 
-        public void SaveToDB(bool trans = true)
+        public Order(User owner, TaxiType taxiType, Address sAddress, Address eAddress)
         {
-            MySQL mysql = MySQL.Instance();
+            this.Id = 0;
+            this.Owner = owner;
+            this.Driver = null;
+            this.SAddress = sAddress;
+            this.EAddress = eAddress;
+            this.Type = taxiType;
+            this.Date = new DateTime();
+            this.Status = OrderStatus.ORDERING_STATUS_QUEUE;
+
+            this._dbStatus = DBStatus.ORDER_NEW;
+        }
+
+        public void SaveToDb(bool trans = true)
+        {
+            if (_dbStatus == DBStatus.ORDER_NONE)
+                return;
+
+            var mysql = MySQL.Instance();
 
             if (trans)
                 mysql.BeginTransaction();
 
-            mysql.PExecute(string.Format("DELETE FROM `orders` WHERE `Id` = {0}", ID));
-            mysql.PExecute(string.Format("INSERT INTO `orders` (`Id`, `type`, `status`, `date`, `address`, `driverId`) VALUES ({0}, {1}, {2}, {3}, {4}, {5})", ID, OrderType, Status, Date, ordAdress.ToString(), Driver != null ? Driver.ID : 0));
+            var driverId = Driver?.Id ?? 0;
+            var ownerId = Owner?.Id ?? 0;
+
+            switch (_dbStatus)
+            {
+                case DBStatus.ORDER_NEW:
+                {
+                    int insertId = mysql.PExecute($"INSERT INTO `orders` (`type`, `status`, `date`, `s_address`, `e_address`, `driverId`, `ownerId`) VALUES ('{(int)Type}', '{(int)Status}', '{Time.UnixTimeNow()}', '{SAddress.ToString()}', '{EAddress.ToString()}', '{driverId}', {ownerId})");
+                    if (insertId == -1)
+                        return;
+
+                    Id = insertId;
+                    break;
+                }
+                case DBStatus.ORDER_CHANGED:
+                {
+                    mysql.PExecute($"DELETE FROM `orders` WHERE `Id` = {Id}");
+                    mysql.PExecute($"INSERT INTO `orders` (`Id`, `type`, `status`, `date`, `s_address`, `e_address`, `driverId`, `ownerId`) VALUES ({Id}, {Type}, {Status}, {Date}, {SAddress.ToString()}, {EAddress.ToString()}, {driverId}, {ownerId})");
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            _dbStatus = DBStatus.ORDER_NONE;
 
             if (trans)
                 mysql.CommitTransaction();
+        }
+
+        public bool IsQueue()
+        {
+            return Status == OrderStatus.ORDERING_STATUS_QUEUE;
+        }
+
+        public bool IsProggress()
+        {
+            return Status == OrderStatus.ORDERING_STATUS_IN_PROCESS;
+        }
+
+        public bool IsValid()
+        {
+            return Id != 0 && SAddress != null &&
+                   EAddress != null && SAddress != EAddress && Owner != null &&
+                   Type == TaxiType.TAXI_TYPE_MAX;
+        }
+
+        public void Cancel()
+        {
+            if (Status != OrderStatus.ORDERING_STATUS_QUEUE)
+                return;
+
+            Status = OrderStatus.ORDERING_STATUS_CANCELED;
+            SaveToDb(true);
+        }
+
+        public static string GetOrderStatusString(OrderStatus status)
+        {
+            switch (status)
+            {
+                case OrderStatus.ORDERING_STATUS_IN_PROCESS:
+                    return "В процессе";
+                case OrderStatus.ORDERING_STATUS_NONE:
+                    return "Нету";
+                case OrderStatus.ORDERING_STATUS_QUEUE:
+                    return "В очереди";
+                case OrderStatus.ORDERING_STATUS_WAIT:
+                    return "Ожидание";
+            }
+
+            return "Ошибка";
+        }
+
+        public static string GetTaxiType(TaxiType type)
+        {
+            switch (type)
+            {
+                case TaxiType.TAXI_TYPE_PASSENGER:
+                    return "Пассажирское";
+                case TaxiType.TAXI_TYPE_TRUCK:
+                    return "Грузовое";
+                default:
+                    break;
+            }
+
+            return "Неизвестно";
+        }
+
+        public bool Validate(out string errorText, bool _new = false)
+        {
+            errorText = "";
+            if (Id == 0 && _new)
+                errorText = "Неизвестный номер";
+            else if (Owner == null)
+                errorText = "Неизвестный заказчик";
+            else if (Type == TaxiType.TAXI_TYPE_MAX)
+                errorText = "Не указан тип такси";
+            else if (SAddress == null)
+                errorText = "Неизвестный адрес заказ";
+            else if (EAddress == null)
+                errorText = "Неизвестный адрес назначения";
+            else if (SAddress == EAddress)
+                errorText = "Адрес заказа и адрес назначения совпадают";
+
+            return errorText.Length == 0;
         }
     }
 }

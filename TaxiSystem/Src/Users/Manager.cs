@@ -1,13 +1,12 @@
-﻿
-using TaxiSystem.Src.Auth;
+﻿using TaxiSystem.Auth;
+using TaxiSystem.Object;
 using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Object;
 
-namespace TaxiSystem.Src.Users
+namespace TaxiSystem.Users
 {
     public class Manager : User
     {
-        public Manager(int Id, string name, AuthToken token) : base(Id, name, token)
+        public Manager(int id, string name, AuthToken token) : base(id, name, token)
         {
             UserTypeId = UserType.USER_TYPE_MANAGER;
         }

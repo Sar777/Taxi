@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TaxiSystem.Src.RatingData
+namespace TaxiSystem.RatingData
 {
     public class Rating
     {
-        private List<float> _rating;
+        private readonly List<float> _rating;
         public Stack<Comment> Comments { get; private set; }
 
         public Rating()
@@ -19,11 +19,7 @@ namespace TaxiSystem.Src.RatingData
             if (_rating.Count == 0)
                 return 0.0f;
 
-            float temp = 0.0f;
-            foreach (float value in _rating)
-                temp += value;
-
-            return temp / _rating.Count;
+            return _rating.Sum() / _rating.Count;
         }
 
         public void AddRating(float rating)
