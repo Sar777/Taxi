@@ -118,6 +118,8 @@
             this.Name = "AuthForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Авторизация";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AuthForm_FormClosing);
+            this.Load += new System.EventHandler(this.AuthForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

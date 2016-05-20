@@ -53,7 +53,7 @@ namespace TaxiSystem.Common
 
             var regex = new Regex(@"([\w]+), ([\w]+), ([\w0-9\\//]+)");
             var matches = regex.Matches(address);
-            return new Address(matches[0].Groups[0].Value, matches[0].Groups[1].Value, matches[0].Groups[2].Value);
+            return new Address(matches[0].Groups[1].Value, matches[0].Groups[2].Value, matches[0].Groups[3].Value);
         }
     }
 }

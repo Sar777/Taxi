@@ -1,55 +1,74 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using TaxiSystem.Common;
-using TaxiSystem.Database.MySQL;
+using TaxiSystem.Common.Enums;
+using TaxiSystem.Networking;
+using TaxiSystem.Protocol;
+using TaxiSystem.Protocol.Enums;
 
-namespace TaxiSystem
+namespace TaxiSystem.AuthForms
 {
     public partial class RegForm : Form
     {
-        private readonly string[] _regErrors = { "Заполните все поля!", "Пользователь с таким именем уже существует", "Пароли не совпадают", "Длина пароля должна быть более 5 символов" };
+        public static RegForm Form { get; private set; }
+
+        private bool _authed = false;
 
         public RegForm()
         {
             InitializeComponent();
+            Form = this;
         }
 
         private void _btReg_Click(object sender, EventArgs e)
         {
-            int errIdx = -1;
-            if (_tbUsername.Text.Length == 0 || _tbPassowrd1.Text.Length == 0 || _tbPassowrd2.Text.Length == 0)
-                errIdx = 0;
-            else if (!_tbPassowrd1.Text.Equals(_tbPassowrd2.Text))             // Проверка паролей
-                errIdx = 2;
-            else if (_tbPassowrd1.Text.Length < 5)
-                errIdx = 3;
-
-            MySQL mysql = MySQL.Instance();
-            using (MySqlDataReader reader = mysql.Execute($"SELECT 1 FROM `users` WHERE `username` = '{ _lbUsername.Text}'"))
+            _lbErrors.Text = string.Empty;
+            if (string.IsNullOrEmpty(_tbUsername.Text) ||
+                string.IsNullOrEmpty(_tbPassowrd1.Text) ||
+                string.IsNullOrEmpty(_tbPassowrd2.Text))
             {
-                if (reader == null)
-                    throw new FormatException("MySQL: Not execute query");
-
-                if (reader.Read())
-                    errIdx = 1;
-            }
-
-            if (errIdx != -1)
-            {
-                _lbErrors.Text = _regErrors[errIdx];
-                _tbPassowrd1.Text = "";
-                _tbPassowrd2.Text = "";
+                _lbErrors.Text = "Заполните все поля!";
                 return;
             }
 
-            mysql.PExecute($"INSERT INTO `users` (`username`, `password`) VALUES ('{_tbUsername.Text}', '{MD5Hash.Get(_tbUsername + ":" + _tbPassowrd1.Text)}')");
-            Close();
+            if (!_tbPassowrd1.Text.Equals(_tbPassowrd2.Text))
+            {
+                _lbErrors.Text = "Пароли не совпадают!";
+                return;
+            }
+
+            _btReg.Enabled = false;
+            var packet = new Packet(Opcode.CMSG_REGISTRATION);
+            packet.WriteUTF8String(_tbUsername.Text);
+            packet.WriteUTF8String(_tbPassowrd1.Text);
+            TCPSocket.Instance.SendPacket(packet);
         }
 
         private void RegForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Owner.Visible = true;
+            if (!_authed)
+                Owner.Visible = true;
+        }
+
+        public void Registration(int userId, string username, UserType userType, RegistrationResponse code)
+        {
+            _tbUsername.Text = string.Empty;
+            _tbPassowrd1.Text = string.Empty;
+            _tbPassowrd2.Text = string.Empty;
+            _btReg.Enabled = true;
+            if (code == RegistrationResponse.REG_RESPONSE_HERE_USER)
+            {
+                _lbErrors.Text = "Пользователь с таким логином уже существует.";
+                return;
+            }
+
+            _authed = true;
+
+            // Авторизация
+            AuthForm.Form.Invoke(new Action(() =>
+            {
+                AuthForm.Form.Auth(userId, username, userType, AuthResponse.AUTH_RESPONSE_SUCCESS);
+            }));
+            Close();
         }
     }
 }

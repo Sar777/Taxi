@@ -1,57 +1,93 @@
 ﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using TaxiSystem.Auth;
-using TaxiSystem.ClientForms;
-using TaxiSystem.Object;
-using TaxiSystem.Src.Common;
+using TaxiSystem.Common;
+using TaxiSystem.Common.Enums;
+using TaxiSystem.Networking;
+using TaxiSystem.Protocol;
+using TaxiSystem.Protocol.Enums;
+using TaxiSystem.UserForms;
 
 namespace TaxiSystem.AuthForms
 {
     public partial class AuthForm : Form
     {
-        private readonly string[] _errMessage = { "Ошибка MySQL", "Пользователь не найден" };
-
+        public static AuthForm Form { get; private set; }
         public AuthForm()
         {
             InitializeComponent();
+            Form = this;
         }
 
-        private void _btAuth_Click(object sender, System.EventArgs e)
+        public void Auth(int userId, string username, UserType userType, AuthResponse code)
         {
-            int errCode = -1;
-            var user = Auth.Auth.Instance.Authorization(_tbUsername.Text, _tbPassword.Text, ref errCode);
-            if (user == null)
+            _tbUsername.Text = string.Empty;
+            _tbPassword.Text = string.Empty;
+            _btAuth.Enabled = true;
+            if (code == AuthResponse.AUTH_RESPONSE_UNKNOWN_USER)
             {
-                _lbAuthError.Text = _errMessage[errCode];
+                _lbAuthError.Text = "Неизвестный пользователь";
                 return;
             }
 
-            Form form = null;
-            switch (user.UserTypeId)
+            if (code == AuthResponse.AUTH_RESPONSE_UNKNOWN_ERROR)
+            {
+                _lbAuthError.Text = "Неизвестныя ошибка...";
+                return;
+            }
+
+            Form userForm = null;
+            switch (userType)
             {
                 case UserType.USER_TYPE_CLIENT:
-                    form = new ClientForm(user);
+                    userForm = new ClientForm(userId, username);
                     break;
-                case UserType.USER_TYPE_MANAGER:
-                    form = new ManagerForm(user);
+                case UserType.USER_TYPE_DISPATCHER:
+                    userForm = new DispatcherForm(userId, username);
                     break;
                 case UserType.USER_TYPE_DRIVER:
                 default:
-                    throw new NotSupportedException(string.Format($"Auth: Unsupported user type {0}", user.UserTypeId));
+                    throw new NotSupportedException($"Not supported usertype {userType}");
             }
 
-            form.Owner = this;
-            form.Show();
-
-            this.Visible = false;
+            Visible = false;
+            userForm.Owner = this;
+            userForm.Show();
         }
 
-        private void _btReg_Click(object sender, System.EventArgs e)
+        private void _btAuth_Click(object sender, EventArgs e)
         {
-            this.Visible = false;
-            RegForm form = new RegForm();
-            form.Owner = this;
+            _lbAuthError.Text = string.Empty;
+            if (string.IsNullOrEmpty(_tbUsername.Text) || string.IsNullOrEmpty(_tbPassword.Text))
+            {
+                _lbAuthError.Text = "Заполните все поля!";
+                return;
+            }
+
+            var packet = new Packet(Opcode.CMSG_AUTH);
+            packet.WriteUTF8String(_tbUsername.Text);
+            packet.WriteUTF8String(_tbPassword.Text);
+            TCPSocket.Instance.SendPacket(packet);
+            _btAuth.Enabled = false;
+            _lbAuthError.Text = string.Empty;
+        }
+
+        private void _btReg_Click(object sender, EventArgs e)
+        {
+            Visible = false;
+            var form = new RegForm {Owner = this};
             form.Show();
+        }
+
+        private void AuthForm_Load(object sender, EventArgs e)
+        {
+            Task.Factory.StartNew(() => { TCPSocket.Instance.Connect(Constants.CONNECT_INFO_HOST, Constants.CONNECT_INFO_PORT); });
+        }
+
+        private void AuthForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            TCPSocket.Instance.SendPacket(new Packet(Opcode.CMSG_DISCONNECTED), true);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TaxiSystem.AuthForms;
+using TaxiSystem.Parser;
 
 namespace TaxiSystem
 {
@@ -15,6 +16,8 @@ namespace TaxiSystem
         [STAThread]
         private static void Main()
         {
+            Handler.LoadHandlers();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new AuthForm());

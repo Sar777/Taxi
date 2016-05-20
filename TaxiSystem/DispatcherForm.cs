@@ -1,41 +1,39 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using TaxiSystem.Common;
-using TaxiSystem.Database.MySQL;
-using TaxiSystem.Object;
-using TaxiSystem.Src.Common;
-using TaxiSystem.Src.Object;
+using TaxiSystem.Networking;
+using TaxiSystem.Protocol;
+using TaxiSystem.UserForms;
 
 namespace TaxiSystem
 {
-    public partial class ManagerForm : Form
+    public partial class DispatcherForm : Form
     {
-        public User User { get; private set; }
-        private Form MainForm { get; set; }
+        private DispatcherForm Form { get; set; }
+        public int UserID { get; set; }
+        public string Username { get; set; }
 
-        public ManagerForm(User user)
+        public DispatcherForm(int userId, string username)
         {
-            User = user;
             InitializeComponent();
         }
 
         private void ManagerForm_Load(object sender, EventArgs e)
         {
-            this.Text = "Панель диспетчера: " + User.Username + ", Здравствуйте!";
-            UpdateOrders();
+            Text = "Панель диспетчера: " + Username + ", Здравствуйте!";
         }
 
         private void ManagerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            TCPSocket.Instance.SendPacket(new Packet(Opcode.CMSG_LOGOUT));
             Owner.Visible = true;
         }
 
         private void _toolStripRefresh_Click(object sender, EventArgs e)
         {
-            UpdateOrders();
+          //  UpdateOrders();
         }
 
+        /*
         private void UpdateOrders()
         {
             MySQL mysql = MySQL.Instance();
@@ -55,6 +53,6 @@ namespace TaxiSystem
                     ++i;
                 }
             }
-        }
+        }*/
     }
 }

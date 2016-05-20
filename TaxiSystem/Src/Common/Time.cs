@@ -2,7 +2,7 @@
 
 namespace TaxiSystem.Common
 {
-    public class Time
+    public static class Time
     {
         public static long UnixTimeNow()
         {
@@ -10,12 +10,19 @@ namespace TaxiSystem.Common
             return (long)timeSpan.TotalSeconds;
         }
 
-        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        public static DateTime UnixTimeStampToDateTime(uint unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
+        }
+
+        public static long UnixTimeFromDataTime(DateTime date)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            var diff = date.ToUniversalTime() - origin;
+            return (long)diff.TotalSeconds;
         }
     }
 }

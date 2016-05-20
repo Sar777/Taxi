@@ -1,4 +1,4 @@
-﻿namespace TaxiSystem.ClientForms
+﻿namespace TaxiSystem.Forms
 {
     partial class ClientSettingsForm
     {

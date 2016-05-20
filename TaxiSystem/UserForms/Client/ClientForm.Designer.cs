@@ -1,4 +1,4 @@
-﻿namespace TaxiSystem.ClientForms
+﻿namespace TaxiSystem.UserForms
 {
     partial class ClientForm
     {
@@ -32,6 +32,7 @@
             this._toolStripMyOrders = new System.Windows.Forms.ToolStripMenuItem();
             this._toolStripSettings = new System.Windows.Forms.ToolStripMenuItem();
             this._gbOrder = new System.Windows.Forms.GroupBox();
+            this._btOrderCancel = new System.Windows.Forms.Button();
             this._lbErrors = new System.Windows.Forms.Label();
             this._lbOrderType = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,12 +41,10 @@
             this._cbSAddress = new System.Windows.Forms.ComboBox();
             this._btAddOrder = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this._toolStripStatusOrder = new System.Windows.Forms.ToolStripStatusLabel();
-            this._btOrderCancel = new System.Windows.Forms.Button();
+            this._currOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._allOrdersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this._gbOrder.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -55,15 +54,18 @@
             this._toolStripSettings});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(381, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(373, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "_mainMenuStripTool";
             // 
             // _toolStripMyOrders
             // 
+            this._toolStripMyOrders.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._currOrderToolStripMenuItem,
+            this._allOrdersToolStripMenuItem});
             this._toolStripMyOrders.Name = "_toolStripMyOrders";
-            this._toolStripMyOrders.Size = new System.Drawing.Size(84, 20);
-            this._toolStripMyOrders.Text = "Мои заказы";
+            this._toolStripMyOrders.Size = new System.Drawing.Size(58, 20);
+            this._toolStripMyOrders.Text = "Заказы";
             // 
             // _toolStripSettings
             // 
@@ -85,10 +87,20 @@
             this._gbOrder.Controls.Add(this.label1);
             this._gbOrder.Location = new System.Drawing.Point(12, 36);
             this._gbOrder.Name = "_gbOrder";
-            this._gbOrder.Size = new System.Drawing.Size(354, 177);
+            this._gbOrder.Size = new System.Drawing.Size(354, 180);
             this._gbOrder.TabIndex = 1;
             this._gbOrder.TabStop = false;
             this._gbOrder.Text = "Заказ";
+            // 
+            // _btOrderCancel
+            // 
+            this._btOrderCancel.Location = new System.Drawing.Point(259, 101);
+            this._btOrderCancel.Name = "_btOrderCancel";
+            this._btOrderCancel.Size = new System.Drawing.Size(75, 23);
+            this._btOrderCancel.TabIndex = 9;
+            this._btOrderCancel.Text = "Отказаться";
+            this._btOrderCancel.UseVisualStyleBackColor = true;
+            this._btOrderCancel.Click += new System.EventHandler(this._btOrderCancel_Click);
             // 
             // _lbErrors
             // 
@@ -164,38 +176,25 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Текущий адрес:";
             // 
-            // statusStrip1
+            // _currOrderToolStripMenuItem
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._toolStripStatusOrder});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 230);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(381, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
+            this._currOrderToolStripMenuItem.Enabled = false;
+            this._currOrderToolStripMenuItem.Name = "_currOrderToolStripMenuItem";
+            this._currOrderToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this._currOrderToolStripMenuItem.Text = "Текущий заказ";
+            this._currOrderToolStripMenuItem.Click += new System.EventHandler(this._currOrderToolStripMenuItem_Click);
             // 
-            // _toolStripStatusOrder
+            // _allOrdersToolStripMenuItem
             // 
-            this._toolStripStatusOrder.Name = "_toolStripStatusOrder";
-            this._toolStripStatusOrder.Size = new System.Drawing.Size(69, 17);
-            this._toolStripStatusOrder.Text = "Состояние:";
-            // 
-            // _btOrderCancel
-            // 
-            this._btOrderCancel.Location = new System.Drawing.Point(259, 101);
-            this._btOrderCancel.Name = "_btOrderCancel";
-            this._btOrderCancel.Size = new System.Drawing.Size(75, 23);
-            this._btOrderCancel.TabIndex = 9;
-            this._btOrderCancel.Text = "Отказаться";
-            this._btOrderCancel.UseVisualStyleBackColor = true;
-            this._btOrderCancel.Click += new System.EventHandler(this._btOrderCancel_Click);
+            this._allOrdersToolStripMenuItem.Name = "_allOrdersToolStripMenuItem";
+            this._allOrdersToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this._allOrdersToolStripMenuItem.Text = "Все заказы";
             // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(381, 252);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(373, 221);
             this.Controls.Add(this._gbOrder);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -209,8 +208,6 @@
             this.menuStrip1.PerformLayout();
             this._gbOrder.ResumeLayout(false);
             this._gbOrder.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,10 +225,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox _cbEAddress;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel _toolStripStatusOrder;
         private System.Windows.Forms.Label _lbErrors;
         private System.Windows.Forms.Button _btOrderCancel;
+        private System.Windows.Forms.ToolStripMenuItem _currOrderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _allOrdersToolStripMenuItem;
     }
 }
 

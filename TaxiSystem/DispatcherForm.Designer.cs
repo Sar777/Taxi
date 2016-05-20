@@ -1,6 +1,6 @@
 ﻿namespace TaxiSystem
 {
-    partial class ManagerForm
+    partial class DispatcherForm
     {
         /// <summary>
         /// Required designer variable.
@@ -114,7 +114,7 @@
             this._toolStripRefresh.Text = "Обновить";
             this._toolStripRefresh.Click += new System.EventHandler(this._toolStripRefresh_Click);
             // 
-            // ManagerForm
+            // DispatcherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -123,7 +123,7 @@
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "ManagerForm";
+            this.Name = "DispatcherForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " ";
             this.TopMost = true;

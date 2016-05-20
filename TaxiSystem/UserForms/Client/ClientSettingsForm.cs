@@ -1,18 +1,10 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TaxiSystem.Common;
-using TaxiSystem.Database.MySQL;
-using TaxiSystem.Src;
 
-namespace TaxiSystem.ClientForms
+namespace TaxiSystem.Forms
 {
     public partial class ClientSettingsForm : Form
     {
@@ -30,10 +22,10 @@ namespace TaxiSystem.ClientForms
         {
             Task.Factory.StartNew(LoadMyAddress);
         }
-
+        
         private void LoadMyAddress()
         {
-            var mysql = MySQL.Instance();
+            /*var mysql = MySQL.Instance();
             using (var reader = mysql.Execute(string.Format($"SELECT `address` FROM `save_address` WHERE `ownerId` = {((ClientForm)Owner).User.Id}")))
             {
                 while (reader.Read())
@@ -45,7 +37,7 @@ namespace TaxiSystem.ClientForms
                         _lbMyAddress.Items.Add(address.ToString());
                     }));
                 }
-            }
+            }*/
         }
 
         private void _lbMyAddress_SelectedIndexChanged(object sender, EventArgs e)
@@ -64,13 +56,13 @@ namespace TaxiSystem.ClientForms
 
         private void ClientSettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var mysql = MySQL.Instance();
+         /*   var mysql = MySQL.Instance();
             mysql.BeginTransaction();
             mysql.PExecute($"DELETE FROM `save_address` WHERE `ownerId` = {((ClientForm)Owner).User.Id}");
             foreach (var address in _addresses)
                 mysql.PExecute($"INSERT INTO `save_address` (`ownerId`, `address`) VALUES ({((ClientForm)Owner).User.Id}, '{address.DbFormat()}')");
 
-            mysql.CommitTransaction();
+            mysql.CommitTransaction();*/
         }
 
         private void _btAddAddress_Click(object sender, EventArgs e)

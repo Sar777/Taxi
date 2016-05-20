@@ -1,4 +1,4 @@
-﻿namespace TaxiSystem
+﻿namespace TaxiSystem.AuthForms
 {
     partial class RegForm
     {

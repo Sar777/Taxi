@@ -53,17 +53,18 @@
     <Compile Include="AuthForms\AuthForm.Designer.cs">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ClientForms\ClientSettingsForm.cs">
+    <Compile Include="src\Common\Enums\UserType.cs" />
+    <Compile Include="UserForms\Client\ClientSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClientForms\ClientSettingsForm.Designer.cs">
+    <Compile Include="UserForms\Client\ClientSettingsForm.Designer.cs">
       <DependentUpon>ClientSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ManagerForm.cs">
+    <Compile Include="DispatcherForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ManagerForm.Designer.cs">
-      <DependentUpon>ManagerForm.cs</DependentUpon>
+    <Compile Include="DispatcherForm.Designer.cs">
+      <DependentUpon>DispatcherForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AuthForms\RegForm.cs">
       <SubType>Form</SubType>
@@ -71,44 +72,48 @@
     <Compile Include="AuthForms\RegForm.Designer.cs">
       <DependentUpon>RegForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Src\Auth\Auth.cs" />
-    <Compile Include="Src\Auth\AuthToken.cs" />
-    <Compile Include="Src\Cars\Passenger.cs" />
-    <Compile Include="Src\Cars\Truck.cs" />
-    <Compile Include="Src\Common\MD5.cs" />
-    <Compile Include="Src\Common\Time.cs" />
-    <Compile Include="Src\Common\UserMgr.cs" />
-    <Compile Include="Src\Database\MySQL\MySQL.cs" />
-    <Compile Include="Src\Object\Car.cs" />
-    <Compile Include="Src\Common\Address.cs" />
-    <Compile Include="Src\Common\Enums.cs" />
-    <Compile Include="Src\Common\OrderMgr.cs" />
-    <Compile Include="Src\Common\Order.cs" />
-    <Compile Include="Src\RatingData\Comment.cs" />
-    <Compile Include="Src\RatingData\Rating.cs" />
-    <Compile Include="Src\Users\Client.cs" />
-    <Compile Include="Src\Users\Driver.cs" />
-    <Compile Include="Src\Users\Manager.cs" />
-    <Compile Include="Src\Object\User.cs" />
-    <Compile Include="ClientForms\ClientForm.cs">
+    <Compile Include="src\Common\ByteBuffer.cs" />
+    <Compile Include="src\Common\Constants.cs" />
+    <Compile Include="src\Common\Cryptography.cs" />
+    <Compile Include="src\Common\MD5.cs" />
+    <Compile Include="src\Common\Time.cs" />
+    <Compile Include="src\Config\Config.cs" />
+    <Compile Include="src\Networking\TCPSocket.cs" />
+    <Compile Include="src\Common\Address.cs" />
+    <Compile Include="src\Parser\Handler.cs" />
+    <Compile Include="src\Parser\ParseAttribute.cs" />
+    <Compile Include="src\Protocol\Enums\AuthResponse.cs" />
+    <Compile Include="src\Protocol\Enums\RegistrationResponse.cs" />
+    <Compile Include="src\Protocol\Handlers.cs" />
+    <Compile Include="src\Protocol\Opcode.cs" />
+    <Compile Include="src\Protocol\Packet.cs" />
+    <Compile Include="src\RatingData\Comment.cs" />
+    <Compile Include="src\RatingData\Rating.cs" />
+    <Compile Include="UserForms\Client\ClientForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClientForms\ClientForm.Designer.cs">
+    <Compile Include="UserForms\Client\ClientForm.Designer.cs">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserForms\Client\OrderInformationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserForms\Client\OrderInformationForm.Designer.cs">
+      <DependentUpon>OrderInformationForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AuthForms\AuthForm.resx">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClientForms\ClientForm.resx">
+    <EmbeddedResource Include="UserForms\Client\ClientForm.resx">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClientForms\ClientSettingsForm.resx">
+    <EmbeddedResource Include="UserForms\Client\ClientSettingsForm.resx">
       <DependentUpon>ClientSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManagerForm.resx">
-      <DependentUpon>ManagerForm.cs</DependentUpon>
+    <EmbeddedResource Include="DispatcherForm.resx">
+      <DependentUpon>DispatcherForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -121,6 +126,9 @@
     </Compile>
     <EmbeddedResource Include="AuthForms\RegForm.resx">
       <DependentUpon>RegForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserForms\Client\OrderInformationForm.resx">
+      <DependentUpon>OrderInformationForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
